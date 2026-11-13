@@ -1,0 +1,184 @@
+[
+  {
+    "name": "完整范围才确认缺失",
+    "routes": [
+      {
+        "path": "/census",
+        "body": {
+          "round": "r2",
+          "pages": [
+            "/p1",
+            "/p2"
+          ]
+        }
+      },
+      {
+        "path": "/p1",
+        "body": {
+          "round": "r2",
+          "range": [
+            0,
+            50
+          ],
+          "complete": true,
+          "members": []
+        }
+      },
+      {
+        "path": "/p2",
+        "body": {
+          "round": "r2",
+          "range": [
+            50,
+            100
+          ],
+          "complete": false,
+          "members": []
+        }
+      }
+    ],
+    "input": {
+      "prior": [
+        {
+          "id": "a",
+          "key": 10,
+          "name": "old",
+          "digest": "same"
+        },
+        {
+          "id": "b",
+          "key": 60,
+          "name": "b",
+          "digest": "same"
+        }
+      ]
+    },
+    "expected": {
+      "states": {
+        "a": "missing",
+        "b": "unchecked"
+      }
+    },
+    "required": [
+      "/p1",
+      "/p2"
+    ]
+  },
+  {
+    "name": "同摘要不同成员不合并",
+    "routes": [
+      {
+        "path": "/census",
+        "body": {
+          "round": "r2",
+          "pages": [
+            "/p1"
+          ]
+        }
+      },
+      {
+        "path": "/p1",
+        "body": {
+          "round": "r2",
+          "range": [
+            0,
+            100
+          ],
+          "complete": true,
+          "members": [
+            {
+              "id": "a",
+              "key": 10,
+              "name": "renamed",
+              "digest": "same"
+            },
+            {
+              "id": "b",
+              "key": 60,
+              "name": "b",
+              "digest": "same"
+            }
+          ]
+        }
+      }
+    ],
+    "input": {
+      "prior": [
+        {
+          "id": "a",
+          "key": 10,
+          "name": "old",
+          "digest": "same"
+        },
+        {
+          "id": "b",
+          "key": 60,
+          "name": "b",
+          "digest": "same"
+        }
+      ]
+    },
+    "expected": {
+      "states": {
+        "a": "renamed",
+        "b": "present"
+      },
+      "memberCount": 2,
+      "contentCount": 1
+    },
+    "required": [
+      "/p1"
+    ]
+  },
+  {
+    "name": "另一轮不能补足清点范围",
+    "routes": [
+      {
+        "path": "/census",
+        "body": {
+          "round": "r2",
+          "pages": [
+            "/p1"
+          ]
+        }
+      },
+      {
+        "path": "/p1",
+        "body": {
+          "round": "r1",
+          "range": [
+            0,
+            100
+          ],
+          "complete": true,
+          "members": []
+        }
+      }
+    ],
+    "input": {
+      "prior": [
+        {
+          "id": "a",
+          "key": 10,
+          "name": "old",
+          "digest": "same"
+        },
+        {
+          "id": "b",
+          "key": 60,
+          "name": "b",
+          "digest": "same"
+        }
+      ]
+    },
+    "expected": {
+      "states": {
+        "a": "unchecked",
+        "b": "unchecked"
+      }
+    },
+    "required": [
+      "/p1"
+    ]
+  }
+]
