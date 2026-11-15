@@ -12,6 +12,7 @@
     "inspect": "node src/inspect.mjs",
     "source": "node src/source.mjs",
     "acceptance": "node --test test/acceptance.test.mjs",
+    "workflow-test": "node --test test/workflow.test.mjs",
     "demo": "node demo.mjs"
   },
   "dependencies": {}
